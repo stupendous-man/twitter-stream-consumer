@@ -1,2 +1,2 @@
 # stupendous-lab
-stupendous man's secret R&amp;D lab
+Top secret (but somehow public) experiments will take place here... 
