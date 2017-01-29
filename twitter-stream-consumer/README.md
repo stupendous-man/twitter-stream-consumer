@@ -1,3 +1,8 @@
 # twitter-stream-consumer
 
-Simple twitter user stream consumer written in go...
+Minimalistic twitter user stream consumer written in go.
+
+## Dependencies
+
+* [docker](https://github.com/docker/docker)
+* [go-twitter](https://github.com/dghubble/go-twitter)
