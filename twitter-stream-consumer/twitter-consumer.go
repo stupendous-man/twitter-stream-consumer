@@ -20,16 +20,25 @@ func main() {
 
 	for _, tweet := range tweets {
 
-		fmt.Println(tweet.Text)
+		simpleTweet := SimpleTweet{}
+
+		simpleTweet.Text = tweet.Text
 
 		for _, url := range tweet.Entities.Urls {
-			fmt.Println("Display URL:", url.DisplayURL)
-			fmt.Println("Expanded URL:", url.ExpandedURL)
-			fmt.Println("URL:", url.URL)
+			simpleTweet.DisplayUrl = url.DisplayURL
+			simpleTweet.ExpandedUrl = url.ExpandedURL
+			simpleTweet.Url = url.URL
 		}
 
-		fmt.Println()
+		fmt.Println(simpleTweet)
 	}
 
 	//TODO: Insert tweet Entity URLs in mongodb
+}
+
+type SimpleTweet struct {
+	Text string
+	DisplayUrl string
+	ExpandedUrl string
+	Url string
 }
