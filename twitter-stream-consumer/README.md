@@ -1,6 +1,6 @@
 # twitter-stream-consumer
 
-Minimalistic twitter user stream consumer written in go, leveraging the go-twitter framework.
+Minimalistic twitter user stream consumer written in go.
 
 ## Dependencies
 
