@@ -18,6 +18,7 @@ func main() {
 
 	client := twitter.NewClient(httpClient)
 
+	//TODO: Retrieve twitter stream in separate go routine
 	tweets, _, _ := client.Timelines.HomeTimeline(&twitter.HomeTimelineParams{Count: 5})
 
 	for _, tweet := range tweets {
