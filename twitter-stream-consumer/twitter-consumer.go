@@ -9,7 +9,7 @@ import (
 	"log"
 	"time"
 	"fmt"
-	"syscall"
+	//"syscall"
 )
 
 func main() {
@@ -44,41 +44,52 @@ func main() {
 	//TODO: Clean this up a bit
 	// Convenience Demux demultiplexed stream messages
 	demux := twitter.NewSwitchDemux()
+
+	//Set what kinds of stream input to process and configure output. In this case I'm only interested in tweets.
+	//TODO: Process Tweet Entities
 	demux.Tweet = func(tweet *twitter.Tweet) {
 		fmt.Println(tweet.Text)
 	}
-	demux.DM = func(dm *twitter.DirectMessage) {
-		fmt.Println(dm.SenderID)
-	}
-	demux.Event = func(event *twitter.Event) {
-		fmt.Printf("%#v\n", event)
-	}
+
+	//demux.DM = func(dm *twitter.DirectMessage) {
+	//	fmt.Println(dm.SenderID)
+	//}
+	//demux.Event = func(event *twitter.Event) {
+	//	fmt.Printf("%#v\n", event)
+	//}
 
 	fmt.Println("Starting Stream...")
 
-	// USER (quick test: auth'd user likes a tweet -> event)
-	 userParams := &twitter.StreamUserParams{
+	//Set user params to establish stream
+	 userParams := &twitter.StreamUserParams {
 	 	StallWarnings: twitter.Bool(true),
 	 	With:          "followings",
 	 	Language:      []string{"en"},
 	 }
+
 	 stream, err := client.Streams.User(userParams)
+
 	 if err != nil {
 	 	log.Fatal(err)
 	 }
 
-	// Receive messages until stopped or stream quits
-	go demux.HandleChan(stream.Messages)
+	//Trap SIGINT to trigger shutdown
+	signals := make(chan os.Signal, 1)
+	signal.Notify(signals, os.Interrupt)
 
-	// Wait for SIGINT and SIGTERM (HIT CTRL-C)
-	ch := make(chan os.Signal)
-	signal.Notify(ch, syscall.SIGINT, syscall.SIGTERM)
-	log.Println(<-ch)
+	//Receive twitter stream on a separate goroutine
+	go func() {
+		demux.HandleChan(stream.Messages)
+	}()
+
+	//Block main thread until SIGINT notification received
+	for range signals {
+		log.Println("Stopping Stream...")
+		stream.Stop()
+		break
+	}
+
 	//TODO: Insert tweet events in Mongo
-	//TODO: Handle SIGINT
-
-	fmt.Println("Stopping Stream...")
-	stream.Stop()
 }
 
 func mongoInsert(simpleTweet SimpleTweet) {
