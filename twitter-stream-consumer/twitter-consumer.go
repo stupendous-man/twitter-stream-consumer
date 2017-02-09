@@ -9,7 +9,6 @@ import (
 	"os"
 	"os/signal"
 	"time"
-	//"syscall"
 )
 
 func main() {
@@ -46,10 +45,7 @@ func main() {
 	demux := twitter.NewSwitchDemux()
 
 	//Set what kinds of stream input to process and configure output. In this case I'm only interested in tweets.
-	//TODO: Process Tweet Entities
 	demux.Tweet = func(tweet *twitter.Tweet) {
-		//fmt.Println(tweet.Text)
-		//fmt.Println(tweet.Entities.Urls)
 
 		simpleTweet := SimpleTweet{}
 
@@ -63,6 +59,8 @@ func main() {
 		}
 
 		fmt.Println(simpleTweet)
+
+		//TODO: Insert tweet events in Mongo
 	}
 
 	//demux.DM = func(dm *twitter.DirectMessage) {
@@ -103,7 +101,6 @@ func main() {
 		break
 	}
 
-	//TODO: Insert tweet events in Mongo
 }
 
 func mongoInsert(simpleTweet SimpleTweet) {
