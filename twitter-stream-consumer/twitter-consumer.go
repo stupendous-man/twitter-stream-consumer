@@ -1,14 +1,14 @@
 package main
 
 import (
+	"fmt"
 	"github.com/dghubble/go-twitter/twitter"
 	"github.com/dghubble/oauth1"
-	"os"
-	"os/signal"
 	"gopkg.in/mgo.v2"
 	"log"
+	"os"
+	"os/signal"
 	"time"
-	"fmt"
 	//"syscall"
 )
 
@@ -49,6 +49,7 @@ func main() {
 	//TODO: Process Tweet Entities
 	demux.Tweet = func(tweet *twitter.Tweet) {
 		fmt.Println(tweet.Text)
+		fmt.Println(tweet.Entities.Urls)
 	}
 
 	//demux.DM = func(dm *twitter.DirectMessage) {
@@ -61,17 +62,17 @@ func main() {
 	fmt.Println("Starting Stream...")
 
 	//Set user params to establish stream
-	 userParams := &twitter.StreamUserParams {
-	 	StallWarnings: twitter.Bool(true),
-	 	With:          "followings",
-	 	Language:      []string{"en"},
-	 }
+	userParams := &twitter.StreamUserParams{
+		StallWarnings: twitter.Bool(true),
+		With:          "followings",
+		Language:      []string{"en"},
+	}
 
-	 stream, err := client.Streams.User(userParams)
+	stream, err := client.Streams.User(userParams)
 
-	 if err != nil {
-	 	log.Fatal(err)
-	 }
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	//Trap SIGINT to trigger shutdown
 	signals := make(chan os.Signal, 1)
@@ -130,8 +131,8 @@ func mongoInsert(simpleTweet SimpleTweet) {
 }
 
 type SimpleTweet struct {
-	Text string
-	DisplayUrl string
+	Text        string
+	DisplayUrl  string
 	ExpandedUrl string
-	Url string
+	Url         string
 }
