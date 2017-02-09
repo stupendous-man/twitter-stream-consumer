@@ -48,8 +48,21 @@ func main() {
 	//Set what kinds of stream input to process and configure output. In this case I'm only interested in tweets.
 	//TODO: Process Tweet Entities
 	demux.Tweet = func(tweet *twitter.Tweet) {
-		fmt.Println(tweet.Text)
-		fmt.Println(tweet.Entities.Urls)
+		//fmt.Println(tweet.Text)
+		//fmt.Println(tweet.Entities.Urls)
+
+		simpleTweet := SimpleTweet{}
+
+		//Populate SimpleTweet struct
+		simpleTweet.Text = tweet.Text
+
+		for _, url := range tweet.Entities.Urls {
+			simpleTweet.DisplayUrl = url.DisplayURL
+			simpleTweet.ExpandedUrl = url.ExpandedURL
+			simpleTweet.Url = url.URL
+		}
+
+		fmt.Println(simpleTweet)
 	}
 
 	//demux.DM = func(dm *twitter.DirectMessage) {
