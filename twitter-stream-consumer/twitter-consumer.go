@@ -20,31 +20,10 @@ func main() {
 
 	client := twitter.NewClient(httpClient)
 
-	//TODO: Retrieve twitter stream in separate go routine
-	//tweets, _, _ := client.Timelines.HomeTimeline(&twitter.HomeTimelineParams{Count: 5})
-	//
-	//for _, tweet := range tweets {
-	//
-	//	simpleTweet := SimpleTweet{}
-	//
-	//	//Populate SimpleTweet struct
-	//	simpleTweet.Text = tweet.Text
-	//
-	//	for _, url := range tweet.Entities.Urls {
-	//		simpleTweet.DisplayUrl = url.DisplayURL
-	//		simpleTweet.ExpandedUrl = url.ExpandedURL
-	//		simpleTweet.Url = url.URL
-	//	}
-	//
-	//	//Insert SimpleTweet in MongoDB
-	//	mongoInsert(simpleTweet)
-	//}
-
-	//TODO: Clean this up a bit
-	// Convenience Demux demultiplexed stream messages
+	//Convenience Demux demultiplexed stream messages
 	demux := twitter.NewSwitchDemux()
 
-	//Set what kinds of stream input to process and configure output. In this case I'm only interested in tweets.
+	//Set what kinds of stream input to process and configure output. In this case I'm only interested in processing tweets.
 	demux.Tweet = func(tweet *twitter.Tweet) {
 
 		simpleTweet := SimpleTweet{}
@@ -61,6 +40,7 @@ func main() {
 		fmt.Println(simpleTweet)
 
 		//TODO: Insert tweet events in Mongo
+		mongoInsert(simpleTweet)
 	}
 
 	//demux.DM = func(dm *twitter.DirectMessage) {
