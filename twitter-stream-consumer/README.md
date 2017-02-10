@@ -1,5 +1,7 @@
 # twitter-stream-consumer
 
+[![Build Status](https://travis-ci.org/stupendous-man/stupendous-lab.svg?branch=master)](https://travis-ci.org/stupendous-man/stupendous-lab)
+
 Minimalistic twitter user stream consumer written in go.
 
 ## Dependencies
