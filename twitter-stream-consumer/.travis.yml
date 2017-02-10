@@ -1,0 +1,6 @@
+language: go
+
+go:
+  - 1.7
+
+script: go get github.com/stupendous-man/stupendous-lab/twitter-stream-consumer
