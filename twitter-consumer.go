@@ -39,7 +39,6 @@ func main() {
 
 		fmt.Println(simpleTweet)
 
-		//TODO: Insert tweet events in Mongo
 		mongoInsert(simpleTweet)
 	}
 
