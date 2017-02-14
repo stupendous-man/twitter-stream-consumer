@@ -10,7 +10,7 @@ import (
 	"io/ioutil"
 )
 
-func TestTwitterStreamConsumption(t *testing.T) {
+func TestTweetConsumption(t *testing.T) {
 	handler := http.NotFound
 
 	//Create test server
