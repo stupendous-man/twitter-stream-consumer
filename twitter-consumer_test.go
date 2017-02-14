@@ -1,9 +1,13 @@
 package main
 
 import (
-	"testing"
 	"net/http"
 	"net/http/httptest"
+	"testing"
+
+	"fmt"
+	"log"
+	"io/ioutil"
 )
 
 func TestTwitterStreamConsumption(t *testing.T) {
@@ -18,29 +22,44 @@ func TestTwitterStreamConsumption(t *testing.T) {
 
 	handler = func(rw http.ResponseWriter, r *http.Request) {
 		//Create mock response
-		resp := `{
-			"Tweet" : {
-				"Entities" : {
-					"Urls" : [ {
-						"DisplayURL" : "xyz.co/123abC",
-						"ExpandedURL" : "http://xyz.co/123abC",
-						"URL" : "https://t.co/123aBc",
-					} ]
-				}
-			}
-		}`
+		resp := []byte(`{"entities" : {"urls" : [ {"display_url" : "xyz.co/123abC", "expanded_url" : "http://xyz.co/123abC", "url" : "https://t.co/123aBc"} ]}}`)
 
 		//Reply with mock response
 		rw.Write([]byte(resp))
 	}
 
-//	ms, err := MockService(ts.URL)
+	mockServerResponse, err := http.Get(ts.URL)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	MockTwitterResponse, err := ioutil.ReadAll(mockServerResponse.Body)
+	mockServerResponse.Body.Close()
+
+	if err != nil {
+
+		log.Fatal(err)
+	}
+
+	fmt.Printf("%s", MockTwitterResponse)
+
+	//TODO: Continue unit test...
 }
 
-//func MockService(url string) (Service, error) {
-//	client, err := elastic.NewSimpleClient(elastic.SetURL(url))
-//	if err != nil {
-//		return nil, err
-//	}
-//	return &service{elasticClient: client}, nil
-//}
+//Simplified version of Tweet struct defined in go-twitter/twitter for test purposes
+type Tweet struct {
+	Entities *Entities `json:"entities"`
+}
+
+//Simplified version of Entities struct defined in go-twitter/twitter for test purposes
+type Entities struct {
+	Urls []URLEntity `json:"urls"`
+}
+
+//Simplified version of URLEntity struct defined in go-twitter/twitter for test purposes
+type URLEntity struct {
+	DisplayURL  string `json:"display_url"`
+	ExpandedURL string `json:"expanded_url"`
+	URL         string `json:"url"`
+}
