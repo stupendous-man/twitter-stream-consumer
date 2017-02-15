@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -43,7 +42,7 @@ func TestTweetConsumption(t *testing.T) {
 
 	mockTwitterResponse := TestTweet{}
 	json.Unmarshal([]byte(mockServerResponseBody), &mockTwitterResponse)
-	
+
 	simpleTweet := TestSimpleTweet{}
 
 	//Populate SimpleTweet struct
