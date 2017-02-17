@@ -40,9 +40,11 @@ func TestTweetConsumption(t *testing.T) {
 		log.Fatal(err)
 	}
 
+	//TODO:Try unmarshalling into Tweet struct from go-twitter/twitter
 	mockTwitterResponse := TestTweet{}
 	json.Unmarshal([]byte(mockServerResponseBody), &mockTwitterResponse)
 
+	//TODO: Move SimpleTweet instantiation logic to func in twitter-consumer.go
 	simpleTweet := TestSimpleTweet{}
 
 	//Populate SimpleTweet struct
@@ -90,6 +92,7 @@ type TestURLEntity struct {
 	URL         string `json:"url"`
 }
 
+//TestSimpleTweet struct represents a processed tweet
 type TestSimpleTweet struct {
 	Text        string
 	DisplayUrl  string

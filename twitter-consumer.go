@@ -23,6 +23,7 @@ func main() {
 	//Convenience Demux demultiplexed stream messages
 	demux := twitter.NewSwitchDemux()
 
+	//TODO: Replace deprecated element
 	//Set what kinds of stream input to process and configure output. In this case I'm only interested in processing tweets.
 	demux.Tweet = func(tweet *twitter.Tweet) {
 
@@ -119,6 +120,7 @@ func mongoInsert(simpleTweet SimpleTweet) {
 	}
 }
 
+//SimpleTweet struct represents a processed tweet
 type SimpleTweet struct {
 	Text        string
 	DisplayUrl  string
