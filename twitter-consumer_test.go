@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"github.com/dghubble/go-twitter/twitter"
 )
 
 func TestTweetConsumption(t *testing.T) {
@@ -41,8 +42,10 @@ func TestTweetConsumption(t *testing.T) {
 		log.Fatal(err)
 	}
 
-	//TODO:Try unmarshalling into Tweet struct from go-twitter/twitter
-	mockTwitterResponse := TestTweet{}
+	//mockTwitterResponse := TestTweet{}
+
+	//Unmarshal into Tweet struct from go-twitter/twitter
+	mockTwitterResponse := twitter.Tweet{}
 	json.Unmarshal([]byte(mockServerResponseBody), &mockTwitterResponse)
 
 	//TODO: Move SimpleTweet instantiation logic to func in twitter-consumer.go
@@ -76,22 +79,22 @@ func TestTweetConsumption(t *testing.T) {
 }
 
 //Simplified version of Tweet struct defined in go-twitter/twitter for test purposes
-type TestTweet struct {
-	Text     string        `json:"text"`
-	Entities *TestEntities `json:"entities"`
-}
+//type TestTweet struct {
+//	Text     string        `json:"text"`
+//	Entities *TestEntities `json:"entities"`
+//}
 
 //Simplified version of Entities struct defined in go-twitter/twitter for test purposes
-type TestEntities struct {
-	Urls []TestURLEntity `json:"urls"`
-}
+//type TestEntities struct {
+//	Urls []TestURLEntity `json:"urls"`
+//}
 
 //Simplified version of URLEntity struct defined in go-twitter/twitter for test purposes
-type TestURLEntity struct {
-	DisplayURL  string `json:"display_url"`
-	ExpandedURL string `json:"expanded_url"`
-	URL         string `json:"url"`
-}
+//type TestURLEntity struct {
+//	DisplayURL  string `json:"display_url"`
+//	ExpandedURL string `json:"expanded_url"`
+//	URL         string `json:"url"`
+//}
 
 //TestSimpleTweet struct represents a processed tweet
 type TestSimpleTweet struct {
