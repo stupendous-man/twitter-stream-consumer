@@ -1,4 +1,3 @@
-//TODO: Move to different package
 package main
 
 import (
