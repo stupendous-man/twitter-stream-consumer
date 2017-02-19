@@ -22,7 +22,7 @@ func TestTweetConsumption(t *testing.T) {
 
 	handler = func(rw http.ResponseWriter, r *http.Request) {
 		//Create mock response
-		resp := []byte(`{"text" : "Test tweet text alt...", "entities" : {"urls" : [ {"display_url" : "xyz.co/123abC", "expanded_url" : "http://xyz.co/123abC", "url" : "https://t.co/123aBc"} ]}}`)
+		resp := []byte(`{"text" : "Test tweet text...", "entities" : {"urls" : [ {"display_url" : "xyz.co/123abC", "expanded_url" : "http://xyz.co/123abC", "url" : "https://t.co/123aBc"} ]}}`)
 
 		//Reply with mock response
 		rw.Write([]byte(resp))
