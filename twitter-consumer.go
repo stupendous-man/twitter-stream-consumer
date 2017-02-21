@@ -84,6 +84,7 @@ func main() {
 
 }
 
+//TODO: Move to separate go source file
 func mongoInsert(simpleTweet SimpleTweet) {
 	//Establish session with Mongo server
 	session, err := mgo.Dial(os.Getenv("MONGO_PORT_27017_TCP_ADDR") + ":" + os.Getenv("MONGO_PORT_27017_TCP_PORT"))
