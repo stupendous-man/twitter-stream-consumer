@@ -70,6 +70,7 @@ func main() {
 	signals := make(chan os.Signal, 1)
 	signal.Notify(signals, os.Interrupt)
 
+	//TODO: Debug issue consuming stream within docker container
 	//Receive twitter stream on a separate goroutine
 	go func() {
 		demux.HandleChan(stream.Messages)
