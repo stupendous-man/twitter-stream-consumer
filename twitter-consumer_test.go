@@ -9,6 +9,7 @@ import (
 	"net/http/httptest"
 	"testing"
 	"github.com/dghubble/go-twitter/twitter"
+	"github.com/stupendous-man/twitter-stream-consumer/mongo-api"
 )
 
 func TestTweetConsumption(t *testing.T) {
@@ -42,64 +43,35 @@ func TestTweetConsumption(t *testing.T) {
 		log.Fatal(err)
 	}
 
-	//mockTwitterResponse := TestTweet{}
-
 	//Unmarshal into Tweet struct from go-twitter/twitter
 	mockTwitterResponse := twitter.Tweet{}
 	json.Unmarshal([]byte(mockServerResponseBody), &mockTwitterResponse)
 
-	//TODO: Move SimpleTweet instantiation logic to func in twitter-consumer.go
-	simpleTweet := TestSimpleTweet{}
+	processedTweet := mongo.ProcessedTweet{}
 
 	//Populate SimpleTweet struct
-	simpleTweet.Text = mockTwitterResponse.Text
+	processedTweet.Text = mockTwitterResponse.Text
 
 	for _, url := range mockTwitterResponse.Entities.Urls {
-		simpleTweet.DisplayUrl = url.DisplayURL
-		simpleTweet.ExpandedUrl = url.ExpandedURL
-		simpleTweet.Url = url.URL
+		processedTweet.DisplayUrl = url.DisplayURL
+		processedTweet.ExpandedUrl = url.ExpandedURL
+		processedTweet.Url = url.URL
 	}
 
-	if simpleTweet.Text != "Test tweet text..." {
-		t.Errorf("Expected \"Test tweet text...\", but instead got %s", simpleTweet.Text)
+	if processedTweet.Text != "Test tweet text..." {
+		t.Errorf("Expected \"Test tweet text...\", but instead got %s", processedTweet.Text)
 	}
 
-	if simpleTweet.DisplayUrl != "xyz.co/123abC" {
-		t.Errorf("Expected \"xyz.co/123abC\" but instead got \"%s\"", simpleTweet.DisplayUrl)
+	if processedTweet.DisplayUrl != "xyz.co/123abC" {
+		t.Errorf("Expected \"xyz.co/123abC\" but instead got \"%s\"", processedTweet.DisplayUrl)
 	}
 
-	if simpleTweet.ExpandedUrl != "http://xyz.co/123abC" {
-		t.Errorf("Expected \"http://xyz.co/123abC\" but instead got \"%s\"", simpleTweet.ExpandedUrl)
+	if processedTweet.ExpandedUrl != "http://xyz.co/123abC" {
+		t.Errorf("Expected \"http://xyz.co/123abC\" but instead got \"%s\"", processedTweet.ExpandedUrl)
 	}
 
-	if simpleTweet.Url != "https://t.co/123aBc" {
-		t.Errorf("Expected \"https://t.co/123aBc\" but instead got \"%s\"", simpleTweet.Url)
+	if processedTweet.Url != "https://t.co/123aBc" {
+		t.Errorf("Expected \"https://t.co/123aBc\" but instead got \"%s\"", processedTweet.Url)
 	}
 
-}
-
-//Simplified version of Tweet struct defined in go-twitter/twitter for test purposes
-//type TestTweet struct {
-//	Text     string        `json:"text"`
-//	Entities *TestEntities `json:"entities"`
-//}
-
-//Simplified version of Entities struct defined in go-twitter/twitter for test purposes
-//type TestEntities struct {
-//	Urls []TestURLEntity `json:"urls"`
-//}
-
-//Simplified version of URLEntity struct defined in go-twitter/twitter for test purposes
-//type TestURLEntity struct {
-//	DisplayURL  string `json:"display_url"`
-//	ExpandedURL string `json:"expanded_url"`
-//	URL         string `json:"url"`
-//}
-
-//TestSimpleTweet struct represents a processed tweet
-type TestSimpleTweet struct {
-	Text        string
-	DisplayUrl  string
-	ExpandedUrl string
-	Url         string
 }
