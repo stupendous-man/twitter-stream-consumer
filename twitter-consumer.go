@@ -5,11 +5,10 @@ import (
 	"fmt"
 	"github.com/dghubble/go-twitter/twitter"
 	"github.com/dghubble/oauth1"
-	"gopkg.in/mgo.v2"
+	"github.com/stupendous-man/twitter-stream-consumer/mongo-api"
 	"log"
 	"os"
 	"os/signal"
-	"time"
 )
 
 func main() {
@@ -28,20 +27,20 @@ func main() {
 	//Set what kinds of stream input to process and configure output. In this case I'm only interested in processing tweets.
 	demux.Tweet = func(tweet *twitter.Tweet) {
 
-		simpleTweet := SimpleTweet{}
+		processedTweet := mongo.ProcessedTweet{}
 
-		//Populate SimpleTweet struct
-		simpleTweet.Text = tweet.Text
+		//Populate ProcessedTweet struct
+		processedTweet.Text = tweet.Text
 
 		for _, url := range tweet.Entities.Urls {
-			simpleTweet.DisplayUrl = url.DisplayURL
-			simpleTweet.ExpandedUrl = url.ExpandedURL
-			simpleTweet.Url = url.URL
+			processedTweet.DisplayUrl = url.DisplayURL
+			processedTweet.ExpandedUrl = url.ExpandedURL
+			processedTweet.Url = url.URL
 		}
 
-		fmt.Println(simpleTweet)
+		fmt.Println(processedTweet)
 
-		mongoInsert(simpleTweet)
+		mongo.Insert(processedTweet)
 	}
 
 	//demux.DM = func(dm *twitter.DirectMessage) {
@@ -83,50 +82,4 @@ func main() {
 		break
 	}
 
-}
-
-//TODO: Move to separate go source file
-func mongoInsert(simpleTweet SimpleTweet) {
-	//Establish session with Mongo server
-	session, err := mgo.Dial(os.Getenv("MONGO_PORT_27017_TCP_ADDR") + ":" + os.Getenv("MONGO_PORT_27017_TCP_PORT"))
-
-	if err != nil {
-		//Retry a few times before going into panic
-		log.Print(err)
-		for retries := 1; retries <= 5; retries++ {
-			log.Printf("Retrying Mongo connection. Attempt %d...", retries)
-			session, err = mgo.Dial(os.Getenv("MONGO_PORT_27017_TCP_ADDR") + ":" + os.Getenv("MONGO_PORT_27017_TCP_PORT"))
-
-			if err != nil {
-				time.Sleep(100 * time.Millisecond)
-			} else {
-				break
-			}
-		}
-	}
-
-	if err != nil {
-		panic(err)
-	}
-
-	//Deferred function to close session
-	defer session.Close()
-
-	//Establish connection with database/collection
-	c := session.DB("tweetsdb").C("tweets")
-
-	//Insert document in database/collection
-	err = c.Insert(&simpleTweet)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
-//SimpleTweet struct represents a processed tweet
-type SimpleTweet struct {
-	Text        string
-	DisplayUrl  string
-	ExpandedUrl string
-	Url         string
 }
