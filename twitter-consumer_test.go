@@ -3,13 +3,13 @@ package main
 
 import (
 	"encoding/json"
+	"github.com/dghubble/go-twitter/twitter"
+	"github.com/stupendous-man/twitter-stream-consumer/mongo-api"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"net/http/httptest"
 	"testing"
-	"github.com/dghubble/go-twitter/twitter"
-	"github.com/stupendous-man/twitter-stream-consumer/mongo-api"
 )
 
 func TestTweetConsumption(t *testing.T) {
