@@ -26,21 +26,7 @@ func main() {
 	//TODO: Replace deprecated element
 	//Set what kinds of stream input to process and configure output. In this case I'm only interested in processing tweets.
 	demux.Tweet = func(tweet *twitter.Tweet) {
-
-		processedTweet := mongo.ProcessedTweet{}
-
-		//Populate ProcessedTweet struct
-		processedTweet.Text = tweet.Text
-
-		for _, url := range tweet.Entities.Urls {
-			processedTweet.DisplayUrl = url.DisplayURL
-			processedTweet.ExpandedUrl = url.ExpandedURL
-			processedTweet.Url = url.URL
-		}
-
-		fmt.Println(processedTweet)
-
-		mongo.Insert(processedTweet)
+		ProcessTweet(tweet)
 	}
 
 	//demux.DM = func(dm *twitter.DirectMessage) {
@@ -81,5 +67,24 @@ func main() {
 		stream.Stop()
 		break
 	}
+
+}
+
+func ProcessTweet(tweet *twitter.Tweet) {
+
+	processedTweet := mongo.ProcessedTweet{}
+
+	//Populate ProcessedTweet struct
+	processedTweet.Text = tweet.Text
+
+	for _, url := range tweet.Entities.Urls {
+		processedTweet.DisplayUrl = url.DisplayURL
+		processedTweet.ExpandedUrl = url.ExpandedURL
+		processedTweet.Url = url.URL
+	}
+
+	fmt.Println(processedTweet)
+
+	mongo.Insert(processedTweet)
 
 }
